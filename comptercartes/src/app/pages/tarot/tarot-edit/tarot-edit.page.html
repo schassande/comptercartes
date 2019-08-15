@@ -1,0 +1,68 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button routerLink="/partie/list">
+                <ion-icon name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title style="text-align: center;">Edition Partie Tarot</ion-title>
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false" menu="main"></ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="partie && !loading" (swipe)="onSwipe($event)">
+    <div style="margin-top: 20px;">
+        <ion-segment #segment id="tabSegment" [(ngModel)]="viewName">
+            <ion-segment-button value="J">Joueurs</ion-segment-button>
+            <ion-segment-button value="B">Bonus</ion-segment-button>
+        </ion-segment>
+    </div>
+    <ion-list *ngIf="viewName === 'J'">
+        <ion-item *ngIf="partie.donnes.length === 0">
+            <ion-label style="width: 40%; text-align: right;">Nombre: </ion-label>
+            <ion-range min="3" max="5" step="1" snaps="true" color="secondary" pin="true" ticks="true" (ionChange)="onNbJoueursChange($event.detail.value)">
+                <span slot="start">3</span>
+                <span slot="end">5</span>
+            </ion-range>
+        </ion-item>
+        <ion-item>
+            <ion-label>Joueur 1:</ion-label>
+            <ion-input [(ngModel)]="partie.joueurs[0].person.name"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Joueur 2:</ion-label>
+            <ion-input [(ngModel)]="partie.joueurs[1].person.name"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Joueur 3:</ion-label>
+            <ion-input [(ngModel)]="partie.joueurs[2].person.name"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="partie.joueurs.length >= 4">
+            <ion-label>Joueur 4:</ion-label>
+            <ion-input [(ngModel)]="partie.joueurs[3].person.name"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="partie.joueurs.length == 5">
+            <ion-label>Joueur 5:</ion-label>
+            <ion-input [(ngModel)]="partie.joueurs[4].person.name"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Appel Partenaire:</ion-label>
+            <ion-toggle [(ngModel)]="partie.appelPartenaire"></ion-toggle>
+        </ion-item>
+    </ion-list>
+    <ion-list *ngIf="viewName === 'B'">
+        <ion-item *ngFor="let bonus of constants.BONUS">
+            <ion-label style="width: 50%; text-align: right; margin-right: 10px;">{{bonus.libelle}} : </ion-label>
+            <ion-input type="number" min="0" max="1000" style="width: 40%;" (ionChange)="newBonusValue(bonus, $event)">{{partie.config.montantBonus[bonus]}}</ion-input>
+        </ion-item>
+    </ion-list>
+    <div style="text-align: center">
+        <ion-button shape="round" (click)="play()" [disabled]="!isValid()">Play</ion-button>
+        <ion-button shape="round" (click)="saveNback()" [disabled]="!isValid()">Enregistrer</ion-button>
+        <ion-button shape="round" (click)="delete()" *ngIf="partie.dataStatus !== 'NEW'">Supprimer</ion-button>
+        <ion-button shape="round" (click)="resetScores()" *ngIf="partie.dataStatus !== 'NEW'">Reset scores</ion-button>
+        <ion-button shape="round" (click)="dupliquer()" *ngIf="partie.dataStatus !== 'NEW'">Dupliquer</ion-button>
+    </div>
+</ion-content>

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 const DATE_SEP = '-';
+const TIME_SLOT_SEP = ':';
 
 @Injectable()
 export class DateService {
@@ -17,7 +18,7 @@ export class DateService {
         return res;
       }
 
-    public date2string(aDate: Date) {
+    public date2string(aDate: Date): string {
         return aDate.getFullYear()
           + DATE_SEP + this.to2Digit(aDate.getMonth() + 1)
           + DATE_SEP + this.to2Digit(aDate.getDate());
@@ -32,6 +33,13 @@ export class DateService {
         aDate.setMonth(Number.parseInt(elements[1], 0) - 1);
         aDate.setDate(Number.parseInt(elements[2], 0));
         return aDate;
+    }
+    public time2string(ts: Date): string {
+      return this.to2Digit(ts.getHours()) + TIME_SLOT_SEP + this.to2Digit(ts.getMinutes());
+    }
+
+    public datetime2string(d: Date): string {
+      return this.date2string(d) + ' ' + this.time2string(d);
     }
 
     public to2Digit(nb: number): string {

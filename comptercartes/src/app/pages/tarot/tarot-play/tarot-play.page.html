@@ -1,0 +1,58 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button routerLink="/partie/list">
+                <ion-icon name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title style="text-align: center;">Partie de Tarot</ion-title>
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false" menu="main"></ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="partie && !loading">
+    <table style="font-size: 0.8em;">
+        <tr style="text-align: center;">
+            <th style="text-align: center; border-right: 1px solid grey;"></th>
+            <th *ngFor="let joueur of partie.joueurs" style="text-align: center;  border: 1px solid grey; border-left: none;" [ngStyle]="{'width': (95/partie.joueurs.length) + '%' }">
+                {{joueur.person.name}}
+            </th>
+        </tr>
+        <tr style="text-align: center; vertical-align: middle; border: 1px solid grey; border-top: none;">
+            <td style="text-align: center; border-top: 1px solid grey; padding: 5px;">Pts</td>
+            <td *ngFor="let joueur of partie.joueurs" style="text-align: center; border-left: 1px solid grey; padding: 5px;" [ngStyle]="{'width': (95/partie.joueurs.length) + '%' }">
+                <span [ngStyle]="{'color': joueur.score >= 0 ? 'green' : 'red' }"></span>{{joueur.score}}
+            </td>
+        </tr>
+        <tr *ngFor="let donne of donnesReverse; let donneIdx = index" (click)="onSelectDonne(donneIdx)" style="text-align: center; border: 1px solid grey; border-top: none;">
+            <td>{{donnesReverse.length - donneIdx}}</td>
+            <td *ngFor="let joueur of partie.joueurs" style="text-align: center; border-left: 1px solid grey; padding: 5px 0;" [ngStyle]="{'width': (95/partie.joueurs.length) + '%' }">
+                <donne-joueur-tarot [donne]="donne" [joueur]="joueur"></donne-joueur-tarot>
+            </td>
+        </tr>
+    </table>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <ion-fab-button (click)="share()">
+                        <ion-icon name="share"></ion-icon>
+                    </ion-fab-button>
+                </ion-col>
+                <ion-col>
+                    <ion-fab-button routerLink="/tarot/{{partie.id}}/edit">
+                        <ion-icon name="construct"></ion-icon>
+                    </ion-fab-button>
+
+                </ion-col>
+                <ion-col>
+                    <ion-fab-button (click)="newDonne()">
+                        <ion-icon name="add"></ion-icon>
+                    </ion-fab-button>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-fab>
+</ion-content>

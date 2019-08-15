@@ -1,0 +1,29 @@
+<ion-header>
+    <ion-toolbar>
+        <span slot="start" style="margin-left: 10px;"><img src="assets/imgs/logo.png" height="30" /></span>
+        <ion-title style="text-align: center;">Accueil</ion-title>
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false" menu="main"></ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-list>
+        <ion-item detail routerLink="/partie/list">
+            <ion-label class="menu-entry">Mes parties</ion-label>
+        </ion-item>
+        <ion-item detail routerLink="/tarot/-1/edit">
+            <ion-label class="menu-entry">Nouveau tarot</ion-label>
+        </ion-item>
+        <ion-item detail routerLink="/coinche/-1/edit">
+            <ion-label class="menu-entry">Nouvelle coinche</ion-label>
+        </ion-item>
+        <ion-item detail routerLink="/user/{{currentUser.id}}/edit">
+            <ion-label class="menu-entry">My account</ion-label>
+        </ion-item>
+        <ion-item (click)="addToHome()" *ngIf="showInstallBtn">
+            <ion-label class="menu-entry">Install on device</ion-label>
+        </ion-item>
+    </ion-list>
+    <div color="light" style="text-align: center; font-size: 0.8em; margin-top: 10px;">Connected as {{getShortName()}}.</div>
+</ion-content>

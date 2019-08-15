@@ -5,12 +5,12 @@
 export const environment = {
   production: false,
   firebase: {
-    apiKey: 'XXX',
-    authDomain: 'refcoach-676e3.firebaseapp.com',
-    databaseURL: 'https://refcoach-676e3.firebaseio.com',
-    projectId: 'refcoach-676e3',
-    storageBucket: 'refcoach-676e3.appspot.com',
-    messagingSenderId: '252857255317'
+    apiKey: 'AIzaSyBvb9KORIJxxrMI5i_0EkJ06mhBeAPbj_w',
+    authDomain: 'compterpartiecartes.firebaseapp.com',
+    databaseURL: 'https://compterpartiecartes.firebaseio.com',
+    projectId: 'compterpartiecartes',
+    storageBucket: 'compterpartiecartes.appspot.com',
+    messagingSenderId: ''
   },
   version: 'dev'
 };

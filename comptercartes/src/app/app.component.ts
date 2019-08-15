@@ -1,8 +1,10 @@
+import { LocalAppSettings } from './model/settings';
 import { Component } from '@angular/core';
 
-import { Platform } from '@ionic/angular';
+import { Platform, MenuController, NavController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { UserService } from './service/UserService';
 
 @Component({
   selector: 'app-root',
@@ -10,10 +12,16 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
+  /** The application settings store on device */
+  appSetttings: LocalAppSettings;
+
   constructor(
+    private navController: NavController,
     private platform: Platform,
     private splashScreen: SplashScreen,
-    private statusBar: StatusBar
+    private statusBar: StatusBar,
+    private menu: MenuController,
+    private userService: UserService
   ) {
     this.initializeApp();
   }
@@ -24,4 +32,20 @@ export class AppComponent {
       this.splashScreen.hide();
     });
   }
+
+  public reloadPage() {
+    window.location.reload(true);
+  }
+
+  public route(url: string = '/home') {
+    console.log('route(', url, ')');
+    this.navController.navigateRoot(url);
+    this.menu.close();
+  }
+
+  public logout() {
+    this.userService.logout();
+    this.route('/user/login');
+  }
 }
+

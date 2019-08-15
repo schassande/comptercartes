@@ -1,0 +1,45 @@
+<ion-header>
+    <ion-toolbar>
+        <span slot="start" style="margin-left: 10px;"><img src="assets/imgs/logo.png" height="30" /></span>
+        <ion-title style="text-align: center;">Login</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <div style="text-align: center; margin-top: 30px;"><img src="assets/imgs/logo.png" height="120" /></div>
+    <div style="text-align: center; margin: 10px 0;">Bienvenue sur l'application<br>Compter Partie de cartes !<br>
+        <br>Entrez votre email et votre mot de passe
+        <br> pour vous conncecter, ou creer un compte.</div>
+    <ion-list>
+        <ion-item>
+            <ion-label position="stacked">Email</ion-label>
+            <ion-input type="email" [(ngModel)]="email" tabindex="1"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label position="stacked">Mot de passe</ion-label>
+            <ion-input type="password" [(ngModel)]="password" tabindex="2"></ion-input>
+        </ion-item>
+        <ion-item style="text-align: right;">
+            <ion-label>Se souvenir&nbsp;</ion-label>
+            <ion-checkbox scope="end " [checked]="savePassword "></ion-checkbox>
+        </ion-item>
+    </ion-list>
+    <div style="text-align: right; margin-right: 10px; ">
+        <a (click)="resetPassword() ">Reset password</a> &nbsp;
+    </div>
+    <div *ngIf="errors && errors.length " style="margin: 5px 20px ">
+        <div style="color: red; ">Erreurs:</div>
+        <ul>
+            <li *ngFor="let error of errors ">{{error}}</li>
+        </ul>
+    </div>
+    <div style="text-align: center; margin-top: 20px; ">
+        <ion-button shape="round " color="success " size="large " (click)="createAccount() ">
+            <ion-icon name="add " scope="start "></ion-icon>
+            Creer compte
+        </ion-button>
+        <ion-button shape="round " size="large " (click)="login() ">
+            <ion-icon name="log-in " scope="start "></ion-icon>
+            Se connecter
+        </ion-button>
+    </div>
+</ion-content>

@@ -1,0 +1,57 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button routerLink="/home">
+                <ion-icon name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title style="text-align: center;">Liste parties</ion-title>
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false" menu="main"></ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <div style="margin-top: 20px;">
+        <ion-segment #segment id="tabSegment" [(ngModel)]="viewName">
+            <ion-segment-button value="T">Tarot</ion-segment-button>
+            <ion-segment-button value="C">Coinches</ion-segment-button>
+        </ion-segment>
+    </div>
+    <ion-list *ngIf="viewName === 'T'">
+        <ion-item *ngFor="let partie of partieTarots">
+            <ion-label class="listItemButton" (click)="partieTarotSelected(partie)">
+                {{dateService.datetime2string(partie.date)}}, {{partie.shareToken}}
+                <br><span *ngFor="let joueur of partie.joueurs">{{joueur.person.name}} </span>
+            </ion-label>
+            <ion-icon slot="end" name="trash" (click)="deletePartieTarot(partie)"></ion-icon>
+        </ion-item>
+    </ion-list>
+    <ion-list *ngIf="viewName === 'C'">
+        <ion-item *ngFor="let partie of partieCoinches">
+            <ion-label class="listItemButton" (click)="partieCoincheSelected(partie)">
+                {{dateService.datetime2string(partie.date)}}, {{partie.shareToken}}
+                <br>{{partie.equipes[0].joueur1.name}}/{{partie.equipes[0].joueur2.name}} vs {{partie.equipes[1].joueur1.name}}/{{partie.equipes[1].joueur2.name}}
+            </ion-label>
+            <ion-icon slot="end" name="trash" (click)="deletePartieCoinche(partie)"></ion-icon>
+        </ion-item>
+    </ion-list>
+    <div style="margin-bottom: 50px;"></div>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <ion-fab-button (click)="importPartie()">
+                        <ion-icon name="share"></ion-icon>
+                    </ion-fab-button>
+                </ion-col>
+                <ion-col>
+                    <ion-fab-button (click)="newPartie()">
+                        <ion-icon name="add"></ion-icon>
+                    </ion-fab-button>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-fab>
+</ion-content>

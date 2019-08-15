@@ -5,63 +5,92 @@ export interface Joueur {
     person: Person;
     score: number;
 }
-export type EnchereTarot = 'Petite' | 'Pousse' | 'Garde' | 'Garde Sans' | 'Garde Contre' | 'Petit Chelem' | 'Grand Chelem';
+export type EnchereTarot = 'Petite' | 'Pousse' | 'Garde' | 'Garde Sans' | 'Garde Contre';
+export const ENCHERES: EnchereTarot[] = ['Petite', 'Pousse', 'Garde', 'Garde Sans', 'Garde Contre'];
 
-export type TypeBonusTarot = 'Blanc Tete' | 'Blanc Atout' | 'Poignee' | 'Double Poignee' | 'Triple Poignee';
+export type TypeBonusTarot = 'BlancTete' | 'BlancAtout' | 'Poignee' | 'DoublePoignee' | 'TriplePoignee' | 'PetitAuBout';
 
+export interface BonusTarotLibelle {
+    type: TypeBonusTarot;
+    defaultValue: number;
+    libelle: string;
+}
+export const BONUS: BonusTarotLibelle [] = [
+    {type: 'BlancTete', defaultValue: 10, libelle: 'Blanc de tete'},
+    {type: 'BlancAtout', defaultValue: 10, libelle: 'Blanc de tete'},
+    {type: 'Poignee', defaultValue: 10, libelle: 'Blanc de tete'},
+    {type: 'DoublePoignee', defaultValue: 10, libelle: 'Blanc de tete'},
+    {type: 'TriplePoignee', defaultValue: 10, libelle: 'Blanc de tete'},
+    {type: 'PetitAuBout', defaultValue: 10, libelle: 'Blanc de tete'}
+];
+
+export function BonusPoint(bonus: TypeBonusTarot) {
+    switch (bonus) {
+        case 'BlancAtout': return 10;
+        case 'BlancTete': return 10;
+        case 'Poignee': return 20;
+        case 'DoublePoignee': return 30;
+        case 'TriplePoignee': return 40;
+        case 'PetitAuBout': return 10;
+    }
+}
+export type Chelem = 'Non' | 'Petit Chelem' | 'Grand Chelem';
 export type EtatBonus = 'Positif' | 'Negatif';
 
 export interface BonusTarot {
-    person: Person;
     type: TypeBonusTarot;
     etat: EtatBonus;
 }
+export type DonneRole = 'Partant' | 'Appele' | 'PartantAppele' | 'Contre';
 
-export interface DonneTarot {
-    joueurPartant: Joueur;
-    joueurAppele: Joueur;
-    adversaires: Joueur[];
-    enchere: EnchereTarot;
+
+export interface DonneJoueurTarot extends Joueur {
+    role: DonneRole;
     bonus: BonusTarot[];
 }
 
+export interface DonneTarot {
+    joueurs: DonneJoueurTarot[];
+    enchere: EnchereTarot;
+    depassement: number;
+    chelemAnnonce: Chelem;
+    chelemFait: Chelem;
+}
+
 export interface ConfigPartieTarot {
-    montantEncheres: Map<EnchereTarot, number>;
-    montantBonus: Map<TypeBonusTarot, number>;
+    montantBonus: any;
 }
 
 export interface Partie extends PersistentData {
     date: Date;
-    lieu: string;
     shareToken: string;
+    owner: string;
+    userIds: string[];
 }
 export interface PartieTarot extends Partie {
+    appelPartenaire: boolean;
     joueurs: Joueur[];
-    parties: DonneTarot[];
+    donnes: DonneTarot[];
     config: ConfigPartieTarot;
 }
 
-export const DEFAULT_CONFIG_TAROT: ConfigPartieTarot = {
-    montantEncheres: new Map()
-        .set('Petite', 20)
-        .set('Pousse', 30)
-        .set('Garde', 40)
-        .set('Garde Sans', 80)
-        .set('Garde Contre', 160)
-        .set('Petit Chelem', 250)
-        .set('Grand Chelem', 500),
-    montantBonus: new Map()
-        .set('Blanc Tete', 5)
-        .set('Blanc Atout', 5)
-        .set('Poignee', 5)
-        .set('Double Poignee', 10)
-        .set('Triple Poignee', 20)
-};
+export function DEFAULT_CONFIG_TAROT(): ConfigPartieTarot {
+    const res =  {
+        montantBonus: {
+            BlancTete: 5,
+            BlancAtout: 5,
+            Poignee: 5,
+            DoublePoignee: 10,
+            TriplePoignee: 20,
+            PetitAuBout: 10
+        }
+    };
+    return res;
+}
 
 export type TypeBonusCoinche = 'Belote' | 'Tierce' | 'Cinquante' | 'Cent' | 'Carre' | 'Coinche' | 'Sur Coinche';
 
 export interface BonusCoinche {
-    equipe: Equipe;
     type: TypeBonusCoinche;
     etat: EtatBonus;
 }
@@ -77,16 +106,19 @@ export interface Equipe {
     joueur2: Person;
     score: number;
 }
+export interface DonneEquipeCoinche extends Equipe {
+    role: DonneRole;
+    bonus: BonusTarot[];
+}
 
 export interface DonneCoinche {
-    equipePartante: Equipe;
-    adversaire: Equipe;
+    equipes: DonneEquipeCoinche[];
     contrat: number;
-    bonus: BonusCoinche[];
+    depassement: number;
 }
 
 export interface PartieCoinche extends Partie {
     equipes: Equipe[];
-    parties: DonneCoinche[];
+    donnes: DonneCoinche[];
     config: ConfigPartieCoinche;
 }

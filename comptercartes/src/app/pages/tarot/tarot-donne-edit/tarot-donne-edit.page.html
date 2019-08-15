@@ -1,0 +1,91 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button routerLink="/tarot/{{partieId}}/play">
+                <ion-icon name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title style="text-align: center;">Edition de la donne</ion-title>
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false" menu="main"></ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="partie && !loading">
+    <ion-list>
+        <ion-item>
+            <ion-label>Preneur: </ion-label>
+            <ion-select (ionChange)="onPreneur($event)" [value]="preneur">
+                <ion-select-option *ngFor="let donneJoueur of donne.joueurs" [value]="donneJoueur.person.name">{{donneJoueur.person.name}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+        <ion-item *ngIf="partie.appelPartenaire">
+            <ion-label>Appelé: </ion-label>
+            <ion-select (ionChange)="onAppele($event)" [value]="appele">
+                <ion-select-option *ngFor="let donneJoueur of donne.joueurs" [value]="donneJoueur.person.name">{{donneJoueur.person.name}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-label>Enchère: </ion-label>
+            <ion-select [(ngModel)]="donne.enchere" (ionChange)="computeValidNScore()">
+                <ion-select-option *ngFor="let enchere of constants.ENCHERES" [value]="enchere">{{enchere}}</ion-select-option>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-label>Depassement: </ion-label>
+            <ion-input type="number" min="0" max="91" [(ngModel)]="donne.depassement" (ionChange)="computeValidNScore()"></ion-input>
+        </ion-item>
+        <ion-item>
+            <ion-label>Chelem annonce: </ion-label>
+            <ion-select [(ngModel)]="donne.chelemAnnonce" (ionChange)="computeValidNScore()">
+                <ion-select-option value="Non">Non</ion-select-option>
+                <ion-select-option value="Petit Chelem">Petit Chelem</ion-select-option>
+                <ion-select-option value="Grand Chelem">Grand Chelem</ion-select-option>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-label>Chelem fait: </ion-label>
+            <ion-select [(ngModel)]="donne.chelemFait" (ionChange)="computeValidNScore()">
+                <ion-select-option value="Non">Non</ion-select-option>
+                <ion-select-option value="Petit Chelem">Petit Chelem</ion-select-option>
+                <ion-select-option value="Grand Chelem">Grand Chelem</ion-select-option>
+            </ion-select>
+        </ion-item>
+    </ion-list>
+    <ul>
+        <li *ngFor="let error of error">{{error}}</li>
+    </ul>
+    <ion-list *ngIf="valid">
+        <ion-item *ngFor="let donneJoueur of donne.joueurs" style="width: 100%;">
+            <div style="width: 30%; text-align: right; display: inline-block; padding-right: 5px;">{{donneJoueur.person.name}}: </div>
+            <div style="width: 70%; text-align: left; display: inline-block; padding-left: 5px;">
+                <span [ngStyle]="{'color':donneJoueur.score > 0 ? 'green' : 'red' }">{{donneJoueur.score > 0 ? '+' : ''}}{{donneJoueur.score}} pts</span>
+                <!-- -->
+                <span *ngIf="getPartieScore(donneJoueur) as partieScore">
+                , Total: <span [ngStyle]="{'color': partieScore > 0 ? 'green' : 'red' }">{{partieScore > 0 ? '+' : ''}}{{partieScore}} pts</span>
+                </span>
+            </div>
+        </ion-item>
+    </ion-list>
+    <div style="text-align: center; margin: 10px;">
+        <ion-grid>
+            <ion-row>
+                <ion-col style="width: 50%;">
+                    <ion-button shape="round" expand="block" color="danger" style="margin-top: 10px;" (click)="delete()" [disabled]="donneIdx === -1">Supprimer</ion-button>
+                </ion-col>
+                <ion-col style="width: 50%;">
+                    <ion-button shape="round" expand="block" color="success" style="margin-top: 10px;" (click)="calculerScoresPartie()" [disabled]="!valid || !hasScores()">Appliquer <br>Scores</ion-button>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col style="width: 50%;">
+                    <ion-button shape="round" expand="block" style="margin-top: 10px;" (click)="back()">Cancel</ion-button>
+                </ion-col>
+                <ion-col style="width: 50%;">
+                    <ion-button shape="round" expand="block" style="margin-top: 10px;" (click)="saveNback()">Enregistrer</ion-button>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </div>
+</ion-content>

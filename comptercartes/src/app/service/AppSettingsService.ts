@@ -1,9 +1,11 @@
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { LocalAppSettings } from './../model/settings';
 import { Storage } from '@ionic/storage';
 import { Injectable } from '@angular/core';
+
 import { LocalSingletonDataService } from './LocalSingletonDataService';
+import { LocalAppSettings } from './../model/settings';
+
 import { environment } from '../../environments/environment';
 
 @Injectable()
@@ -24,12 +26,8 @@ export class AppSettingsService extends LocalSingletonDataService<LocalAppSettin
                         lastUserEmail: null,
                         lastUserPassword: null,
                         forceOffline: false,
-                        nbPeriod: 2
                     };
                     super.save(result);
-                }
-                if (!result.nbPeriod) {
-                    result.nbPeriod = 2;
                 }
                 return result;
             })

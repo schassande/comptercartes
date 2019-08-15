@@ -99,7 +99,6 @@ export abstract class RemotePersistentDataService<D extends PersistentData> impl
             data.lastUpdate = new Date();
             data.version ++;
             this.fireStoreCollection.doc(data.id).update(data);
-            // return this.voidToObs(this.fireStoreCollection.doc(data.id).update(data), data);
             return of({ error: null, data});
         }
     }

@@ -1,16 +1,16 @@
-import { AngularFireFunctions } from '@angular/fire/functions';
-import { LocalAppSettings } from './../model/settings';
-import { AppSettingsService } from './AppSettingsService';
+import { Injectable } from '@angular/core';
 import { AlertController, ToastController, LoadingController } from '@ionic/angular';
 import { AngularFirestore } from 'angularfire2/firestore';
-
-import { ResponseWithData, Response } from './response';
 import { Observable, of, from, Subject } from 'rxjs';
-import { ConnectedUserService } from './ConnectedUserService';
-import { Injectable } from '@angular/core';
-import { User, CONSTANTES, AuthProvider } from './../model/user';
-import { RemotePersistentDataService } from './RemotePersistentDataService';
 import { flatMap, map, catchError } from 'rxjs/operators';
+
+import { AppSettingsService } from './AppSettingsService';
+import { ConnectedUserService } from './ConnectedUserService';
+import { LocalAppSettings } from './../model/settings';
+import { RemotePersistentDataService } from './RemotePersistentDataService';
+import { ResponseWithData, Response } from './response';
+import { User } from './../model/user';
+
 import * as firebase from 'firebase/app';
 
 @Injectable()
@@ -22,8 +22,7 @@ export class UserService  extends RemotePersistentDataService<User> {
         private connectedUserService: ConnectedUserService,
         private appSettingsService: AppSettingsService,
         private alertCtrl: AlertController,
-        private loadingController: LoadingController,
-        private angularFireFunctions: AngularFireFunctions
+        private loadingController: LoadingController
     ) {
         super(db, toastController);
     }
@@ -36,18 +35,6 @@ export class UserService  extends RemotePersistentDataService<User> {
         return 1;
     }
 
-    protected adjustFieldOnLoad(item: User) {
-        if (item.defaultCompetitionId === undefined || item.defaultCompetitionId === null) {
-            item.defaultCompetitionId = '';
-        }
-        if (item.region === undefined || item.region === null) {
-            item.region = 'Others';
-        }
-        if (!item.accountStatus) {
-            item.accountStatus = 'ACTIVE';
-        }
-    }
-
     public save(user: User, cred: firebase.auth.UserCredential = null): Observable<ResponseWithData<User>> {
         if (!user) {
             return of({data: null, error: { error : 'null user', errorCode: -1}});
@@ -56,7 +43,7 @@ export class UserService  extends RemotePersistentDataService<User> {
         delete user.password;
         if (user.dataStatus === 'NEW') {
             let obs: Observable<firebase.auth.UserCredential> = null;
-            if (cred !== null  && (user.authProvider === 'FACEBOOK' || user.authProvider === 'GOOGLE')) {
+            if (cred !== null) {
                 obs = of(cred);
             } else {
                 obs = from(firebase.auth().createUserWithEmailAndPassword(user.email, password));
@@ -69,9 +56,6 @@ export class UserService  extends RemotePersistentDataService<User> {
                 }),
                 flatMap((ruser) => {
                     if (ruser.data) {
-                        // TODO send an email to admin with the account to validate
-                        this.sendNewAccountToAdmin(ruser.data.id);
-                        this.sendNewAccountToUser(ruser.data.id);
                         this.appSettingsService.setLastUser(user.email, password);
                         return this.autoLogin();
                     } else {
@@ -288,15 +272,7 @@ export class UserService  extends RemotePersistentDataService<User> {
         return this.query(this.getCollectionRef().where('shortName', '==', shortName), 'default');
     }
 
-    public authWithGoogle(): Observable<ResponseWithData<User>> {
-        return this.authWith(new firebase.auth.GoogleAuthProvider(), 'GOOGLE');
-    }
-
-    public authWithFacebook(): Observable<ResponseWithData<User>> {
-        return this.authWith(new firebase.auth.FacebookAuthProvider(), 'FACEBOOK');
-    }
-
-    public authWith(authProvider: any, authName: AuthProvider): Observable<ResponseWithData<User>> {
+    public authWith(authProvider: any): Observable<ResponseWithData<User>> {
         let credential = null;
         return from(firebase.auth().signInWithPopup(authProvider)).pipe(
             flatMap( (cred: firebase.auth.UserCredential) => {
@@ -310,7 +286,7 @@ export class UserService  extends RemotePersistentDataService<User> {
             }),
             flatMap( (ruser: ResponseWithData<User>) => {
                 if (!ruser.data) {
-                    return this.save(this.createUserFromCredential(credential, authName), credential);
+                    return this.save(this.createUserFromCredential(credential), credential);
                 } else {
                     return of(ruser);
                 }
@@ -330,60 +306,25 @@ export class UserService  extends RemotePersistentDataService<User> {
             + lastName.charAt(lastName.length - 1).toUpperCase();
     }
 
-    private createUserFromCredential(cred: firebase.auth.UserCredential, authProvider: AuthProvider): User {
+    private createUserFromCredential(cred: firebase.auth.UserCredential): User {
         if (!cred || !cred.user) {
             return null;
         }
         const names = cred.user.displayName.split(' ');
-        const firstName: string = names[0];
-        const lastName: string = names.length > 1 ? names[1] : ' ';
-        const shortName: string = this.computeShortName(firstName, lastName);
+        const name: string = names[0];
         return {
             id: null,
             accountId: cred.user.uid,
-            accountStatus: 'VALIDATION_REQUIRED',
+            accountStatus: 'ACTIVE',
             role: 'USER',
-            authProvider,
             version: 0,
             creationDate : new Date(),
             lastUpdate : new Date(),
             dataStatus: 'NEW',
-            firstName,
-            lastName,
-            shortName,
-            country: CONSTANTES.countries[0][0],
+            name,
             email: cred.user.email,
-            gender: 'M',
-            mobilePhones: [ ],
-            photo: {
-              path: null,
-              url: null
-            },
-            speakingLanguages: [ 'EN' ],
-            referee : {
-                refereeLevel: null,
-                refereeCategory : 'OPEN',
-                nextRefereeLevel: null
-            },
-            refereeCoach: {
-                refereeCoachLevel: null
-            },
             password: '',
-            token: null,
-            defaultCompetition: '',
-            defaultCompetitionId: '',
-            region: 'Others',
-            defaultGameCatory: 'OPEN',
-            dataSharingAgreement: {
-              personnalInfoSharing: 'YES',
-              photoSharing: 'YES',
-              refereeAssessmentSharing: 'YES',
-              refereeCoachingInfoSharing: 'YES',
-              coachAssessmentSharing: 'YES',
-              coachCoachingInfoSharing: 'YES',
-              coachProSharing: 'NO'
-            },
-            groupIds: []
+            token: null
         };
     }
     deleteAccount(user: User) {
@@ -395,17 +336,5 @@ export class UserService  extends RemotePersistentDataService<User> {
         } else {
             this.delete(user.id).subscribe();
         }
-    }
-    public sendNewAccountToAdmin(userId: string): Observable<any> {
-        return this.angularFireFunctions.httpsCallable('sendNewAccountToAdmin')({userId});
-    }
-    public sendNewAccountToUser(userId: string): Observable<any> {
-        return this.angularFireFunctions.httpsCallable('sendNewAccountToUser')({userId});
-    }
-    public sendAccountValidated(userId: string): Observable<any> {
-        return this.angularFireFunctions.httpsCallable('sendAccountValidated')({userId});
-    }
-    public sendAccountNotValidated(userId: string): Observable<any> {
-        return this.angularFireFunctions.httpsCallable('sendAccountNotValidated')({userId});
     }
 }
