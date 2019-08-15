@@ -1,3 +1,4 @@
+import { ConnectedUserService } from './service/ConnectedUserService';
 import { LocalAppSettings } from './model/settings';
 import { Component } from '@angular/core';
 
@@ -17,10 +18,11 @@ export class AppComponent {
 
   constructor(
     private navController: NavController,
+    public connectedUserService: ConnectedUserService,
+    private menu: MenuController,
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private menu: MenuController,
     private userService: UserService
   ) {
     this.initializeApp();
