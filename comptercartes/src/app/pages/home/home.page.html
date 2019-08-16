@@ -8,22 +8,26 @@
     </ion-toolbar>
 </ion-header>
 <ion-content>
-    <ion-list>
-        <ion-item detail routerLink="/partie/list">
-            <ion-label class="menu-entry">Mes parties</ion-label>
-        </ion-item>
-        <ion-item detail routerLink="/tarot/-1/edit">
-            <ion-label class="menu-entry">Nouveau tarot</ion-label>
-        </ion-item>
-        <ion-item detail routerLink="/coinche/-1/edit">
-            <ion-label class="menu-entry">Nouvelle coinche</ion-label>
-        </ion-item>
-        <ion-item detail routerLink="/user/{{currentUser.id}}/edit">
-            <ion-label class="menu-entry">My account</ion-label>
-        </ion-item>
-        <ion-item (click)="addToHome()" *ngIf="showInstallBtn">
-            <ion-label class="menu-entry">Install on device</ion-label>
-        </ion-item>
-    </ion-list>
-    <div color="light" style="text-align: center; font-size: 0.8em; margin-top: 10px;">Connected as {{getShortName()}}.</div>
+    <ion-grid>
+        <ion-row>
+            <ion-col routerLink="/partie/list" style="text-align: center; margin: 10px;">
+                <img src="assets/imgs/mes_parties.png">
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col style="font-size: 1.3em;">Nouvelle partie : </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col routerLink="/tarot/-1/edit">
+                <img src="assets/imgs/tarot.jpg">
+            </ion-col>
+            <ion-col routerLink="/coinche/-1/edit">
+                <img src="assets/imgs/coinche.jpg">
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-button shape="round" expand="block" (click)="addToHome()" *ngIf="showInstallBtn">Installer l'application sur l'écran d'accueil</ion-button>
+    <div color="light" style="text-align: center; font-size: 0.8em; margin-top: 10px;">Connected as
+        <a routerLink="/user/{{currentUser.id}}/edit">{{getShortName()}}</a>.
+    </div>
 </ion-content>
