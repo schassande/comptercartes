@@ -6,7 +6,7 @@ import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
 import { ToastController } from '@ionic/angular';
-import { PartieTarot } from '../model/jeux';
+import { PartieTarot } from '../model/tarot';
 import { flatMap } from 'rxjs/operators';
 
 @Injectable()
@@ -30,6 +30,16 @@ export class PartieTarotService extends RemotePersistentDataService<PartieTarot>
     }
     protected adjustFieldOnLoad(item: PartieTarot) {
       item.date = this.adjustDate(item.date, this.dateService);
+      item.donnes.forEach( donne => {
+        donne.joueurs.forEach(joueur => {
+          const role: string = joueur.role;
+          if (role === 'Partant') {
+            joueur.role = 'Preneur';
+          } else if (role === 'PartantAppele') {
+            joueur.role = 'PreneurAppele';
+          }
+        });
+      });
     }
 
     public all(): Observable<ResponseWithData<PartieTarot[]>> {

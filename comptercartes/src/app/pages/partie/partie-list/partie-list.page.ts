@@ -1,11 +1,11 @@
-import { ConnectedUserService } from './../../../service/ConnectedUserService';
 import { NavController, AlertController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 
 import { DateService } from '../../../service/DateService';
 import { PartieCoincheService } from '../../../service/PartieCoincheServic';
 import { PartieTarotService } from '../../../service/PartieTarotService';
-import { PartieTarot, PartieCoinche } from '../../../model/jeux';
+import { PartieCoinche } from './../../../model/coinche';
+import { PartieTarot } from './../../../model/tarot';
 import { ResponseWithData } from '../../../service/response';
 
 @Component({

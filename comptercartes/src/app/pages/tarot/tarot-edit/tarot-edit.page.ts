@@ -8,8 +8,7 @@ import { flatMap, map, catchError } from 'rxjs/operators';
 import { ConnectedUserService } from './../../../service/ConnectedUserService';
 import { DateService } from '../../../service/DateService';
 import { PartieTarotService } from '../../../service/PartieTarotService';
-import { PartieTarot } from '../../../model/jeux';
-import { DEFAULT_CONFIG_TAROT, ENCHERES, BONUS, EnchereTarot, TypeBonusTarot } from '../../../model/jeux';
+import { PartieTarot, DEFAULT_CONFIG_TAROT, ENCHERES, BONUS, TypeBonusTarot } from '../../../model/tarot';
 
 @Component({
   selector: 'app-tarot-edit',
@@ -166,7 +165,8 @@ export class TarotEditPage implements OnInit {
   }
 
   newBonusValue(bonus: TypeBonusTarot, event) {
-    this.partie.config.montantBonus[bonus] = event.value;
+    console.log('Affection de la valeur ' + event.detail.value + ' au bonus ' + bonus);
+    this.partie.config.montantBonus[bonus] = event.detail.value;
   }
 
   play() {

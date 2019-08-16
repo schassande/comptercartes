@@ -1,4 +1,3 @@
-import { DonneTarot } from './../../../model/jeux';
 import { ActivatedRoute } from '@angular/router';
 import { DateService } from './../../../service/DateService';
 import { ConnectedUserService } from './../../../service/ConnectedUserService';
@@ -6,7 +5,7 @@ import { AlertController, NavController } from '@ionic/angular';
 import { Component, OnInit } from '@angular/core';
 import { PartieTarotService } from 'src/app/service/PartieTarotService';
 import { Observable, of } from 'rxjs';
-import { PartieTarot } from 'src/app/model/jeux';
+import { PartieTarot, DonneTarot } from './../../../model/tarot';
 import { flatMap, map, catchError } from 'rxjs/operators';
 
 @Component({

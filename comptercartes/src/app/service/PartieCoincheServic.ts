@@ -6,7 +6,7 @@ import { Observable, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { RemotePersistentDataService } from './RemotePersistentDataService';
 import { ToastController } from '@ionic/angular';
-import { PartieCoinche } from '../model/jeux';
+import { PartieCoinche } from '../model/coinche';
 import { flatMap } from 'rxjs/operators';
 
 

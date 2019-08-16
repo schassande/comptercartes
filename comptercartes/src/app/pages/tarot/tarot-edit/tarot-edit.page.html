@@ -54,8 +54,8 @@
     </ion-list>
     <ion-list *ngIf="viewName === 'B'">
         <ion-item *ngFor="let bonus of constants.BONUS">
-            <ion-label style="width: 50%; text-align: right; margin-right: 10px;">{{bonus.libelle}} : </ion-label>
-            <ion-input type="number" min="0" max="1000" style="width: 40%;" (ionChange)="newBonusValue(bonus, $event)">{{partie.config.montantBonus[bonus]}}</ion-input>
+            <ion-label style="width: 50%; text-align: right; margin-right: 10px;">{{bonus.libelle}}: </ion-label>
+            <ion-input type="number" min="0" max="1000" style="width: 40%;" [(ngModel)]="partie.config.montantBonus[bonus.type]"></ion-input>
         </ion-item>
     </ion-list>
     <div style="text-align: center">

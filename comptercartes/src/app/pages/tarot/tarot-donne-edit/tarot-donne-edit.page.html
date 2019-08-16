@@ -5,7 +5,7 @@
                 <ion-icon name="arrow-back"></ion-icon>
             </ion-button>
         </ion-buttons>
-        <ion-title style="text-align: center;">Edition de la donne</ion-title>
+        <ion-title style="text-align: center;">Edition de la donne<span *ngIf="partie"> {{ donneIdx === -1 ? partie.donnes.length + 1 : (donneIdx + 1)}}</span></ion-title>
         <ion-buttons slot="end">
             <ion-menu-button autoHide="false" menu="main"></ion-menu-button>
         </ion-buttons>
@@ -34,7 +34,7 @@
         </ion-item>
         <ion-item>
             <ion-label>Depassement: </ion-label>
-            <ion-input type="number" min="0" max="91" [(ngModel)]="donne.depassement" (ionChange)="computeValidNScore()"></ion-input>
+            <ion-input type="number" min="-91" max="91" inputmode="numeric" step="1" [(ngModel)]="donne.depassement" (ionChange)="computeValidNScore()"></ion-input>
         </ion-item>
         <ion-item>
             <ion-label>Chelem annonce: </ion-label>
@@ -52,10 +52,27 @@
                 <ion-select-option value="Grand Chelem">Grand Chelem</ion-select-option>
             </ion-select>
         </ion-item>
+        <ion-item-group>
+            <ion-item-divider color="light">
+                <span scope="start">Bonus</span>
+                <ion-button slot="end" shape="round" expand="block" color="success" style="margin-top: 10px;" (click)="ajouterBonus()" style="margin-right: 10px;">
+                    <ion-icon name="add" (click)="ajouterBonus()"></ion-icon>
+                </ion-button>
+            </ion-item-divider>
+            <span *ngFor="let donneJoueur of donne.joueurs">
+                <ion-item *ngFor="let bonus of donneJoueur.bonus; let bonusIdx = index">
+                    <ion-label>{{donneJoueur.person.name}}: {{getBonusLibelle(bonus.type).libelle}}</ion-label>
+                    <ion-icon name="trash" slot="end" (click)="deleteBonus(donneJoueur, bonusIdx)"></ion-icon>
+                </ion-item>
+            </span>
+        </ion-item-group>
+        <ion-item-group *ngIf="errors">
+            <ion-item-divider color="light">{{errors.length}} Erreur(s)</ion-item-divider>
+            <ion-item *ngFor="let error of errors">
+                <ion-label>{{error}}</ion-label>
+            </ion-item>
+        </ion-item-group>
     </ion-list>
-    <ul>
-        <li *ngFor="let error of error">{{error}}</li>
-    </ul>
     <ion-list *ngIf="valid">
         <ion-item *ngFor="let donneJoueur of donne.joueurs" style="width: 100%;">
             <div style="width: 30%; text-align: right; display: inline-block; padding-right: 5px;">{{donneJoueur.person.name}}: </div>

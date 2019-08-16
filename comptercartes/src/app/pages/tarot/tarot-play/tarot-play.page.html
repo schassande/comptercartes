@@ -26,7 +26,7 @@
                 <span [ngStyle]="{'color': joueur.score >= 0 ? 'green' : 'red' }"></span>{{joueur.score}}
             </td>
         </tr>
-        <tr *ngFor="let donne of donnesReverse; let donneIdx = index" (click)="onSelectDonne(donneIdx)" style="text-align: center; border: 1px solid grey; border-top: none;">
+        <tr *ngFor="let donne of donnesReverse; let donneIdx = index" (click)="onSelectDonne(donnesReverse.length - donneIdx - 1)" style="text-align: center; border: 1px solid grey; border-top: none;">
             <td>{{donnesReverse.length - donneIdx}}</td>
             <td *ngFor="let joueur of partie.joueurs" style="text-align: center; border-left: 1px solid grey; padding: 5px 0;" [ngStyle]="{'width': (95/partie.joueurs.length) + '%' }">
                 <donne-joueur-tarot [donne]="donne" [joueur]="joueur"></donne-joueur-tarot>

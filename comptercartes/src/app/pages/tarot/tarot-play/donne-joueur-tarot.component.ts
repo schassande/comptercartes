@@ -1,10 +1,10 @@
-import { DonneJoueurTarot, DonneTarot } from './../../../model/jeux';
+import { DonneJoueurTarot, DonneTarot } from './../../../model/tarot';
 import { Joueur } from '../../../model/jeux';
 import { Component, OnInit, Input } from '@angular/core';
 @Component({
     selector: 'donne-joueur-tarot',
     template: `<div *ngIf="donneJoueur" style="text-align: center;">
-    <span *ngIf="donneJoueur.role == 'Partant' || donneJoueur.role == 'PartantAppele'">
+    <span *ngIf="donneJoueur.role == 'Preneur' || donneJoueur.role == 'PreneurAppele'">
       {{enchere}} <span [ngStyle]="{'color':donne.depassement >= 0 ? 'green' : 'red' }">{{donne.depassement}}</span>
       </span>
       <ul *ngIf="donneJoueur.bonus">
@@ -35,8 +35,8 @@ import { Component, OnInit, Input } from '@angular/core';
     private getRole() {
       switch (this.donneJoueur.role) {
         case 'Appele': return 'Appelé';
-        case 'Partant': return 'Partant';
-        case 'PartantAppele': return 'Auto';
+        case 'Preneur': return 'Preneur';
+        case 'PreneurAppele': return 'Auto';
         default: return null;
       }
     }
