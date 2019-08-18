@@ -1,9 +1,172 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>CoinchePlay</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button routerLink="/partie/list">
+                <ion-icon name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title style="text-align: center;">Partie de Coinche</ion-title>
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false" menu="main"></ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="partie && !loading">
+    <table style="font-size: 0.8em;">
+        <tr style="text-align: center;">
+            <th style="text-align: center; border-right: 1px solid grey;"></th>
+            <th *ngFor="let equipe of partie.equipes" style="text-align: center;  border: 1px solid grey; border-left: none; width: 47%;">
+                {{equipe.joueur1.name}}/{{equipe.joueur2.name}}
+            </th>
+        </tr>
+        <tr style="text-align: center; vertical-align: middle; border: 1px solid grey; border-top: none;">
+            <td style="text-align: center; border-top: 1px solid grey; padding: 5px;">Pts</td>
+            <td *ngFor="let equipe of partie.equipes" style="text-align: center; border-left: 1px solid grey; padding: 5px; width: 47%;">
+                <span [ngStyle]="{'color': equipe.score >= 0 ? 'green' : 'red' }">{{equipe.score}}</span>
+            </td>
+        </tr>
+        <tr *ngFor="let donne of donnesReverse; let donneIdx = index" (click)="onSelectDonne(donnesReverse.length - donneIdx - 1)" style="text-align: center; border: 1px solid grey; border-top: none;">
+            <td>{{donnesReverse.length - donneIdx}}</td>
+            <td *ngFor="let equipe of partie.equipes" style="text-align: center; border-left: 1px solid grey; padding: 5px 0; width: 47%;">
+                <donne-equipe-coinche [donne]="donne" [equipe]="equipe"></donne-equipe-coinche>
+            </td>
+        </tr>
+    </table>
+    <div class="helpTitle">Valeurs des cartes</div>
+    <ion-grid style="text-align: center;">
+        <ion-row style="font-weight: bold;">
+            <ion-col>Carte</ion-col>
+            <ion-col>Normal</ion-col>
+            <ion-col>Aout</ion-col>
+            <ion-col>Tout atout</ion-col>
+            <ion-col>Sans atout</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col style="font-weight: bold;">As</ion-col>
+            <ion-col>11</ion-col>
+            <ion-col>11</ion-col>
+            <ion-col>11</ion-col>
+            <ion-col>19</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col style="font-weight: bold;">Roi</ion-col>
+            <ion-col>4</ion-col>
+            <ion-col>4</ion-col>
+            <ion-col>4</ion-col>
+            <ion-col>4</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col style="font-weight: bold;">Dame</ion-col>
+            <ion-col>3</ion-col>
+            <ion-col>3</ion-col>
+            <ion-col>3</ion-col>
+            <ion-col>3</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col style="font-weight: bold;">Valet</ion-col>
+            <ion-col>2</ion-col>
+            <ion-col>20</ion-col>
+            <ion-col>20</ion-col>
+            <ion-col>2</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col style="font-weight: bold;">Dix</ion-col>
+            <ion-col>10</ion-col>
+            <ion-col>10</ion-col>
+            <ion-col>10</ion-col>
+            <ion-col>10</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col style="font-weight: bold;">Neuf</ion-col>
+            <ion-col>0</ion-col>
+            <ion-col>14</ion-col>
+            <ion-col>0</ion-col>
+            <ion-col>0</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col style="font-weight: bold;">Huit</ion-col>
+            <ion-col>0</ion-col>
+            <ion-col>0</ion-col>
+            <ion-col>0</ion-col>
+            <ion-col>0</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col style="font-weight: bold;">Sept</ion-col>
+            <ion-col>0</ion-col>
+            <ion-col>0</ion-col>
+            <ion-col>0</ion-col>
+            <ion-col>0</ion-col>
+        </ion-row>
+    </ion-grid>
+    <div class="helpTitle">Correspondance des enchères</div>
+    <ion-grid style="text-align: center;">
+        <ion-row style="font-weight: bold;">
+            <ion-col>Normal</ion-col>
+            <ion-col>Tout atout</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>80</ion-col>
+            <ion-col>123</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>90</ion-col>
+            <ion-col>138</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>100</ion-col>
+            <ion-col>154</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>110</ion-col>
+            <ion-col>169</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>120</ion-col>
+            <ion-col>184</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>130</ion-col>
+            <ion-col>200</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>140</ion-col>
+            <ion-col>215</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>150</ion-col>
+            <ion-col>230</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>160</ion-col>
+            <ion-col>245</ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>162</ion-col>
+            <ion-col>256</ion-col>
+        </ion-row>
+    </ion-grid>
+    <div style="margin-bottom: 100px;"></div>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <ion-fab-button (click)="share()">
+                        <ion-icon name="share"></ion-icon>
+                    </ion-fab-button>
+                </ion-col>
+                <ion-col>
+                    <ion-fab-button routerLink="/coinche/{{partie.id}}/edit">
+                        <ion-icon name="construct"></ion-icon>
+                    </ion-fab-button>
 
+                </ion-col>
+                <ion-col>
+                    <ion-fab-button (click)="newDonne()">
+                        <ion-icon name="add"></ion-icon>
+                    </ion-fab-button>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-fab>
 </ion-content>

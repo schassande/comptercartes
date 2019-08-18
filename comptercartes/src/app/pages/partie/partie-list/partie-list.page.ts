@@ -1,5 +1,5 @@
 import { NavController, AlertController } from '@ionic/angular';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
 import { DateService } from '../../../service/DateService';
 import { PartieCoincheService } from '../../../service/PartieCoincheServic';
@@ -24,21 +24,25 @@ export class PartieListPage implements OnInit {
     public dateService: DateService,
     private navController: NavController,
     private partieCoincheService: PartieCoincheService,
-    private partieTarotService: PartieTarotService
+    private partieTarotService: PartieTarotService,
+    private ref: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
     this.searchPartieCoinches();
     this.searchPartieTarots();
   }
+  onViewChange() {
+    this.ref.detectChanges();
+  }
   private searchPartieTarots() {
     this.partieTarotService.all().subscribe((rparties: ResponseWithData<PartieTarot[]>) => {
-      this.partieTarots = rparties.data;
+      this.partieTarots = this.partieTarotService.sortParties(rparties.data, true);
     });
   }
   private searchPartieCoinches() {
     this.partieCoincheService.all().subscribe((rparties: ResponseWithData<PartieCoinche[]>) => {
-      this.partieCoinches = rparties.data;
+      this.partieCoinches = this.partieCoincheService.sortParties(rparties.data, true);
     });
   }
 

@@ -21,7 +21,6 @@ export class TarotPlayPage implements OnInit {
 
   constructor(
     private alertCtrl: AlertController,
-    private connectedUserService: ConnectedUserService,
     public dateService: DateService,
     public navController: NavController,
     private partieService: PartieTarotService,

@@ -1,3 +1,4 @@
+import { DonneEquipeCoincheComponent } from './pages/coinche/coinche-play/donne-equipe-coinche.component';
 import { CoincheEditPage } from './pages/coinche/coinche-edit/coinche-edit.page';
 import { CoincheDonneEditPage } from './pages/coinche/coinche-donne-edit/coinche-donne-edit.page';
 import { DonneJoueurTarotComponent } from './pages/tarot/tarot-play/donne-joueur-tarot.component';
@@ -48,7 +49,7 @@ export class CustomHammerConfig extends HammerGestureConfig {}
 @NgModule({
   declarations: [AppComponent,
     CoincheDonneEditPage, CoincheDonneEditPage, CoinchePlayPage, CoincheEditPage,
-    DonneJoueurTarotComponent,
+    DonneJoueurTarotComponent, DonneEquipeCoincheComponent,
     HomePage,
     PartieListPage,
     TarotDonneEditPage, TarotEditPage, TarotPlayPage,

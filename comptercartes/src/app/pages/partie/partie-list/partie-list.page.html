@@ -14,9 +14,9 @@
 
 <ion-content>
     <div style="margin-top: 20px;">
-        <ion-segment #segment id="tabSegment" [(ngModel)]="viewName">
+        <ion-segment #segment id="tabSegment" [(ngModel)]="viewName" (ionChange)="onViewChange()">
             <ion-segment-button value="T">Tarot</ion-segment-button>
-            <ion-segment-button value="C">Coinches</ion-segment-button>
+            <ion-segment-button value="C">Coinche</ion-segment-button>
         </ion-segment>
     </div>
     <ion-list *ngIf="viewName === 'T'">

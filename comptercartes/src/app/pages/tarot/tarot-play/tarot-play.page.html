@@ -23,7 +23,7 @@
         <tr style="text-align: center; vertical-align: middle; border: 1px solid grey; border-top: none;">
             <td style="text-align: center; border-top: 1px solid grey; padding: 5px;">Pts</td>
             <td *ngFor="let joueur of partie.joueurs" style="text-align: center; border-left: 1px solid grey; padding: 5px;" [ngStyle]="{'width': (95/partie.joueurs.length) + '%' }">
-                <span [ngStyle]="{'color': joueur.score >= 0 ? 'green' : 'red' }"></span>{{joueur.score}}
+                <span [ngStyle]="{'color': joueur.score >= 0 ? 'green' : 'red' }">{{joueur.score}}</span>
             </td>
         </tr>
         <tr *ngFor="let donne of donnesReverse; let donneIdx = index" (click)="onSelectDonne(donnesReverse.length - donneIdx - 1)" style="text-align: center; border: 1px solid grey; border-top: none;">
@@ -33,6 +33,7 @@
             </td>
         </tr>
     </table>
+    <div style="margin-bottom: 50px;"></div>
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-grid>
             <ion-row>

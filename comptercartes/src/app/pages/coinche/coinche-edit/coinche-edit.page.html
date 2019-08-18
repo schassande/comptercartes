@@ -1,9 +1,81 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>CoincheEdit</ion-title>
-  </ion-toolbar>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button routerLink="/partie/list">
+                <ion-icon name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title style="text-align: center;">Edition Partie Coinche</ion-title>
+        <ion-buttons slot="end">
+            <ion-menu-button autoHide="false" menu="main"></ion-menu-button>
+        </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
+<ion-content *ngIf="partie && !loading" (swipe)="onSwipe($event)">
+    <div style="margin-top: 20px;">
+        <ion-segment #segment id="tabSegment" [(ngModel)]="viewName" (ionChange)="onViewChange()">
+            <ion-segment-button value="E">Equipes</ion-segment-button>
+            <ion-segment-button value="C">Config</ion-segment-button>
+        </ion-segment>
+    </div>
+    <ion-list *ngIf="viewName === 'E'">
+        <ion-item-group>
+            <ion-item-divider color="light">
+                <span scope="start">Equipe 1</span>
+            </ion-item-divider>
+            <ion-item>
+                <ion-label>Joueur 1:</ion-label>
+                <ion-input [(ngModel)]="partie.equipes[0].joueur1.name" (ionChange)="isValid()"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label>Joueur 2:</ion-label>
+                <ion-input [(ngModel)]="partie.equipes[0].joueur2.name" (ionChange)="isValid()"></ion-input>
+            </ion-item>
+        </ion-item-group>
+        <ion-item-group>
+            <ion-item-divider color="light">
+                <span scope="start">Equipe 2</span>
+            </ion-item-divider>
+            <ion-item>
+                <ion-label>Joueur 1:</ion-label>
+                <ion-input [(ngModel)]="partie.equipes[1].joueur1.name" (ionChange)="isValid()"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label>Joueur 2:</ion-label>
+                <ion-input [(ngModel)]="partie.equipes[1].joueur2.name" (ionChange)="isValid()"></ion-input>
+            </ion-item>
+        </ion-item-group>
+    </ion-list>
+    <ion-list *ngIf="viewName === 'C'">
+        <ion-item>
+            <ion-label>Avec annonce:</ion-label>
+            <ion-toggle [(ngModel)]="partie.config.avecAnnonce" (ionChange)="onViewChange()"></ion-toggle>
+        </ion-item>
+        <ion-item>
+            <ion-label>Sans/tout Atout:</ion-label>
+            <ion-toggle [(ngModel)]="partie.config.sansToutAtout"></ion-toggle>
+        </ion-item>
+        <ion-item>
+            <ion-label>Calcul score:</ion-label>
+            <ion-select [(ngModel)]="partie.config.strategiePoint">
+                <ion-select-option value="PointsDemandes">Points demandés</ion-select-option>
+                <ion-select-option value="PointFaits">Points faits</ion-select-option>
+                <ion-select-option value="PointsDemandesEtFaits">Les deux</ion-select-option>
+            </ion-select>
+        </ion-item>
+        <span *ngFor="let bonus of constants.ListBonusCoinche">
+            <ion-item *ngIf="!bonus.annonce || partie.config.avecAnnonce">
+            <ion-label style="width: 50%; text-align: right; margin-right: 10px;">{{bonus.libelle}}: </ion-label>
+            <ion-input type="number" min="0" max="1000" style="width: 40%;" [(ngModel)]="partie.config.montantBonus[bonus.type]"></ion-input>
+        </ion-item>
+        </span>
+    </ion-list>
+    <div style="text-align: center; margin: 10px 0 30px 0;">
+        <ion-button shape="round" (click)="play()" [disabled]="!valid">Play</ion-button>
+        <ion-button shape="round" (click)="saveNback()" [disabled]="!valid">Enregistrer</ion-button>
+        <ion-button shape="round" (click)="delete()" *ngIf="partie.dataStatus !== 'NEW'">Supprimer</ion-button>
+        <ion-button shape="round" (click)="resetScores()" *ngIf="partie.dataStatus !== 'NEW'">Reset scores</ion-button>
+        <ion-button shape="round" (click)="dupliquer()" *ngIf="partie.dataStatus !== 'NEW'">Dupliquer</ion-button>
+    </div>
 </ion-content>

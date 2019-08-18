@@ -7,11 +7,11 @@ import { Component, OnInit, Input } from '@angular/core';
     <span *ngIf="donneJoueur.role == 'Preneur' || donneJoueur.role == 'PreneurAppele'">
       {{enchere}} <span [ngStyle]="{'color':donne.depassement >= 0 ? 'green' : 'red' }">{{donne.depassement}}</span>
       </span>
-      <ul *ngIf="donneJoueur.bonus">
-        <li *ngFor="let bonus of donneJoueur.bonus"
+      <div *ngIf="donneJoueur.bonus">
+        <div *ngFor="let bonus of donneJoueur.bonus"
           [ngStyle]="{'color':bonus.etat === 'Positif' ? 'green' : 'red' }">{{bonus.type}}
-        </li>
-      </ul>
+        </div>
+      </div>
       <div [ngStyle]="{'color':donneJoueur.score >= 0 ? 'green' : 'red' }">{{donneJoueur.score}}</div>
     </div>`,
     styles: [``],
